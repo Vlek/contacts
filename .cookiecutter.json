@@ -1,0 +1,13 @@
+{
+  "_template": "gh:cjolowicz/cookiecutter-hypermodern-python",
+  "author": "Derek Vlek McCammond",
+  "copyright_year": "2024",
+  "development_status": "Development Status :: 1 - Planning",
+  "email": "vlek@h7yk.com",
+  "friendly_name": "Contacts",
+  "github_user": "vlek",
+  "license": "GPL-3.0",
+  "package_name": "contacts",
+  "project_name": "contacts",
+  "version": "0.0.1"
+}
