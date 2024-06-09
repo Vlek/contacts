@@ -46,7 +46,7 @@ xdoctest = {extras = ["colors"], version = ">=0.15.10"}
 myst-parser = {version = ">=0.16.1"}
 
 [tool.poetry.scripts]
-contacts = "contacts.__main__:main"
+contacts = "contacts.__main__:contacts"
 
 [tool.coverage.paths]
 source = ["src", "*/site-packages"]
