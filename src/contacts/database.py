@@ -4,6 +4,8 @@ relating to handling the contacts-specific actions.
 """
 import sqlite3
 from datetime import datetime
+from pathlib import Path
+from sqlite3 import Cursor
 
 
 class Database:
@@ -16,9 +18,13 @@ class Database:
         ],
     }
 
-    def __init__(self, database_file: str = "contacts.db") -> None:
-        self.connection = sqlite3.connect(database_file)
+    def __init__(self, config_folder: str, database_file: str = "contacts.db") -> None:
+        database_file_location: Path = Path(config_folder) / database_file
+
+        self.connection = sqlite3.connect(database_file_location)
         self.cursor = self.connection.cursor()
+
+        self._init_tables()
 
     def add_person(
         self,
@@ -70,3 +76,13 @@ class Database:
             )
 
         # log that tables were created
+
+    def __del__(self):
+        """Write out changes to the db on delete."""
+        self.connection.close()
+
+    def __len__(self):
+        """Returns the number of people in the db."""
+        dbResult: Cursor = self.cursor.execute("SELECT COUNT(1) FROM people")
+
+        return dbResult.fetchone()[0]

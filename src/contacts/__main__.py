@@ -11,22 +11,27 @@ CONTACTS: Contacts = Contacts()
 @click.version_option()
 def contacts() -> None:
     """Contacts."""
-    click.echo("Hello world!")
 
 
 # TODO, would also like a, c, and create
 @contacts.command()
-@click.option("--firstName")
-@click.option("--lastName")
-def add(firstName: str = "", lastName: str = "") -> None:
+@click.option("--firstname")
+@click.option("--lastname")
+def add(firstname: str, lastname: str) -> None:
     click.echo("Adding new contact")
-    CONTACTS.addPerson(firstName, lastName)
+    CONTACTS.addPerson(firstname, lastname)
 
 
 # TODO, Would also like d and del
 @contacts.command()
 def delete() -> None:
     click.echo("Select which contact to delete")
+
+
+@contacts.command()
+def get() -> None:
+    response = CONTACTS.
+    click.echo(response)
 
 
 if __name__ == "__main__":

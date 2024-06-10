@@ -8,6 +8,7 @@ If people wish to then save these settings and use them across different
 PCs, they should have that option.
 """
 
+import logging
 from pathlib import Path
 
 import yaml
@@ -18,18 +19,25 @@ DEFAULT_CONFIG_FILE_NAME: str = "contacts.yaml"
 
 
 class Config:
-    def __init__(self, config_folder: str = DEFAULT_CONFIG_FOLDER) -> None:
-        config_file_name: str = DEFAULT_CONFIG_FILE_NAME
+    def __init__(
+        self,
+        config_file_path: str = f"{DEFAULT_CONFIG_FOLDER}/{DEFAULT_CONFIG_FILE_NAME}",
+    ) -> None:
+        self._load(config_file_path)
 
-        self.folder: Path = Path(config_folder)
+    def _load(self, config_file_path: str) -> None:
+        self.config_file_path: Path = Path(config_file_path).expanduser()
 
-        if not self.folder.exists:
-            self.folder.mkdir()
+        self.config_folder_path: Path = self.config_file_path.parent
 
-        self.config_file_path: Path = self.folder / config_file_name
+        if not self.config_folder_path.exists():
+            self.config_folder_path.mkdir()
 
-        with open(self.config_file_path, "a+") as config_file:
-            self.config: dict[str, object] = yaml.safe_load(config_file)
+        if self.config_file_path.exists():
+            with self.config_file_path.open() as config_file:
+                self.config: dict[str, object] = yaml.safe_load(config_file)
+        else:
+            self.config: dict[str, object] = {}
 
     def write(self) -> None:
         """Writes the configuration to the config file."""
