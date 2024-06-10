@@ -29,8 +29,9 @@ def delete() -> None:
 
 
 @contacts.command()
-def get() -> None:
-    response = CONTACTS.
+@click.option("--num", "-n", help="", default=-1)
+def get(num: int) -> None:
+    response = CONTACTS.get(count=num)
     click.echo(response)
 
 

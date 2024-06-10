@@ -3,9 +3,9 @@ Shim on top of sqlite3 in order to hide away implementation details
 relating to handling the contacts-specific actions.
 """
 import sqlite3
-from datetime import datetime
 from pathlib import Path
 from sqlite3 import Cursor
+from typing import Any
 
 
 class Database:
@@ -32,17 +32,16 @@ class Database:
         last_name: str,
         **kwargs,
     ) -> bool:
-        try:
-            self.cursor.execute(
-                "INSERT INTO people VALUES (:firstName, :lastName)",
-                {
-                    "firstName": first_name,
-                    "lastName": last_name,
-                },
-            )
-            return True
-        except Exception as ex:
-            return False
+        self.cursor.execute(
+            "INSERT INTO people VALUES (:id, :firstName, :middleName, :lastName)",
+            {
+                "id": None,
+                "firstName": first_name,
+                "middleName": None,
+                "lastName": last_name,
+            },
+        )
+        return True
 
     def delete_person(
         self,
@@ -57,12 +56,11 @@ class Database:
     ) -> bool:
         return False
 
-    def get_person(
-        self,
-        personid: str,
-        format: str,
-    ) -> str:
-        return "Not working yet. :C"
+    def get_people(self, **kwargs) -> list[Any]:
+        """Returns from the people table given filters."""
+        dbResponse: Cursor = self.cursor.execute("SELECT * FROM people")
+
+        return dbResponse.fetchall()
 
     def _execute(self, dbCommand: str, data: dict) -> None:
         self.cursor.execute(dbCommand, data)
@@ -79,6 +77,7 @@ class Database:
 
     def __del__(self):
         """Write out changes to the db on delete."""
+        self.connection.commit()
         self.connection.close()
 
     def __len__(self):

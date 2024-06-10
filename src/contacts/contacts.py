@@ -11,3 +11,10 @@ class Contacts:
 
     def addPerson(self, firstName: str, lastName: str) -> bool:
         return self.database.add_person(firstName, lastName)
+
+    def get(self, **kwargs):
+        """Returns people based on filters given."""
+
+        resultArray = self.database.get_people(**kwargs)
+
+        return resultArray
